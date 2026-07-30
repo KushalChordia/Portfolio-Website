@@ -27,12 +27,12 @@ export function CompetitionMark({
   return (
     <div
       className={cn(
-        "relative h-[7.5rem] w-[7.5rem] shrink-0 overflow-hidden",
+        "relative h-20 w-20 shrink-0 overflow-hidden sm:h-[7.5rem] sm:w-[7.5rem]",
         "rounded-lg border-2 bg-void/50",
         ACCENT_BORDER_STRONG[accent],
       )}
     >
-      <Image src={LOGO_SRC[logo]} alt={org} fill sizes="120px" className="object-cover" />
+      <Image src={LOGO_SRC[logo]} alt={org} fill sizes="(max-width: 639px) 80px, 120px" className="object-cover" />
     </div>
   );
 }

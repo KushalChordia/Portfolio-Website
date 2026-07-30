@@ -11,7 +11,7 @@ import { ECELL } from "@/constants/content";
 
 export const metadata: Metadata = {
   title: "E-Cell Gallery",
-  description: `Photos from ${ECELL.org} — ${ECELL.team}.`,
+  description: `Photos from ${ECELL.org} - ${ECELL.team}.`,
 };
 
 const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
@@ -48,7 +48,7 @@ export default function EcellGalleryPage() {
           iconImage={{ src: "/icons/ECell.jpg", alt: `${ECELL.org} logo` }}
           iconImageBorderClass="border-azure/70"
           title={ECELL.org}
-          subtitle={`${ECELL.team} — Moments from the journey`}
+          subtitle={`${ECELL.team} - Moments from the journey`}
           className="mt-6"
         />
 

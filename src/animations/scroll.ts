@@ -21,22 +21,23 @@ interface SlideBehindOptions {
 }
 
 /**
- * Experience: the heading and character stay put while the cards travel
- * upward, then recede — dimming, easing back and drifting up a little — as
- * the cards pass in front of them. z-index does the occlusion; this only
- * adds the depth cue.
+ * Heading + character stay put while the cards travel upward, then recede
+ * fully out of sight — dimming to nothing, easing back and drifting up — as
+ * the cards pass in front of them. z-index does the occlusion while they're
+ * still overlapping; the opacity has to actually reach 0, otherwise the
+ * header keeps showing through as a faint ghost once you've scrolled past it.
  */
 export function slideBehind({ header, cards, section }: SlideBehindOptions) {
   const ctx = gsap.context(() => {
     gsap.to(header, {
       y: -56,
-      scale: 0.965,
-      opacity: 0.28,
+      scale: 0.94,
+      opacity: 0,
       ease: "none",
       scrollTrigger: {
         trigger: cards,
         start: "top 82%",
-        end: "top 26%",
+        end: "top 30%",
         scrub: 0.6,
         invalidateOnRefresh: true,
       },

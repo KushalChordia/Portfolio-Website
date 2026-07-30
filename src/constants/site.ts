@@ -5,7 +5,7 @@ export const SITE = {
   role: "Product Manager",
   url: "https://kushalchordia.com",
   description:
-    "Kushal Chordia — product manager, Taekwondo black belt, and Core at E-Cell IIT Madras. Product work at Kotak Securities, competition wins across Inter IIT and PMx.",
+    "Kushal Chordia - product manager, Taekwondo black belt, and Core at E-Cell IIT Madras. Product work at Kotak Securities, competition wins across Inter IIT and PMx.",
 } as const;
 
 export const NAV_ITEMS: NavItem[] = [

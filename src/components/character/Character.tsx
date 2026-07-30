@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { BLINK, IDLE } from "@/animations/idle";
+import { BLINK, GLITCH, IDLE } from "@/animations/idle";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { SPRITES } from "@/constants/site";
 import type { CharacterPose } from "@/types";
@@ -19,6 +19,8 @@ interface CharacterProps {
   priority?: boolean;
   /** Turn the blink off where the face renders too small for it to register. */
   blink?: boolean;
+  /** Occasional signal-dropout flicker — the hero wave only. */
+  glitch?: boolean;
 }
 
 /**
@@ -48,11 +50,13 @@ export function Character({
   sizes,
   priority = false,
   blink = true,
+  glitch = false,
 }: CharacterProps) {
   const sprite = SPRITES[pose];
   const idle = IDLE[pose];
   const prefersReducedMotion = usePrefersReducedMotion();
   const isBlinking = useBlink(blink && !prefersReducedMotion);
+  const isGlitching = useGlitch(glitch && !prefersReducedMotion);
 
   return (
     <motion.div
@@ -73,7 +77,10 @@ export function Character({
         loading={priority ? undefined : "lazy"}
         sizes={sizes}
         draggable={false}
-        className="pixelated h-full w-full object-contain"
+        className={cn(
+          "pixelated h-full w-full object-contain",
+          isGlitching && "motion-safe:animate-character-glitch",
+        )}
       />
 
       {blink && (
@@ -150,4 +157,42 @@ function useBlink(enabled: boolean): boolean {
   }, [enabled]);
 
   return closed;
+}
+
+/**
+ * Glitch timing. Same irregular-gap shape as the blink, just rarer and with
+ * a longer "on" window matching the CSS keyframe's own duration.
+ */
+function useGlitch(enabled: boolean): boolean {
+  const [glitching, setGlitching] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      setGlitching(false);
+      return;
+    }
+
+    let onTimer: number;
+    let nextTimer: number;
+
+    const schedule = () => {
+      const gap = GLITCH.minGapMs + Math.random() * (GLITCH.maxGapMs - GLITCH.minGapMs);
+      nextTimer = window.setTimeout(() => {
+        setGlitching(true);
+        onTimer = window.setTimeout(() => {
+          setGlitching(false);
+          schedule();
+        }, GLITCH.durationMs);
+      }, gap);
+    };
+
+    schedule();
+
+    return () => {
+      window.clearTimeout(onTimer);
+      window.clearTimeout(nextTimer);
+    };
+  }, [enabled]);
+
+  return glitching;
 }

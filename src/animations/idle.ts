@@ -67,3 +67,11 @@ export const BLINK = {
   minGapMs: 3400,
   maxGapMs: 7400,
 } as const;
+
+/** Glitch cadence: frequent enough to actually be noticed. Duration must
+ *  match the `character-glitch` keyframe length in globals.css. */
+export const GLITCH = {
+  durationMs: 650,
+  minGapMs: 3000,
+  maxGapMs: 6000,
+} as const;

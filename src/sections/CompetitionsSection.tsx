@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Character } from "@/components/character/Character";
 import { CompetitionMark } from "@/components/ui/CompetitionMark";
+import { Highlighted } from "@/components/ui/Highlighted";
 import { PixelBadge } from "@/components/ui/PixelBadge";
 import { PixelCard } from "@/components/ui/PixelCard";
 import { PixelIcon } from "@/components/ui/PixelIcon";
-import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { slideBehind } from "@/animations/scroll";
 import { COMPETITIONS } from "@/constants/content";
 import type { Competition } from "@/types";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { ACCENT_BORDER, ACCENT_TEXT } from "@/utils/accents";
 import { cn } from "@/utils/cn";
 
 /**
  * COMPETITIONS
+ *
+ * Same pinned-header choreography as Experience: the heading and character
+ * stay put while the card stack rides up over them, then recede — dimming,
+ * easing back — as the cards pass in front.
  *
  * Three results, three identical cards. The mark, the badge and the tag row
  * hold the same position and the same dimensions in all three, so the eye can
@@ -24,23 +31,40 @@ import { cn } from "@/utils/cn";
  * at the top, then the description, then the tags.
  */
 export function CompetitionsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const header = headerRef.current;
+    const cards = cardsRef.current;
+    const section = sectionRef.current;
+    if (!header || !cards || !section) return;
+
+    return slideBehind({ header, cards, section });
+  }, [prefersReducedMotion]);
+
   return (
     <section
+      ref={sectionRef}
       id="competitions"
       aria-labelledby="competitions-heading"
       className="relative scroll-mt-[var(--nav-h)] pt-10 pb-16 lg:pt-16 lg:pb-20"
     >
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <div className="flex items-end justify-between gap-6">
-          <Reveal>
-            <SectionHeading
-              id="competitions-heading"
-              icon="trophy"
-              title="Competitions"
-              subtitle="Building Products Under Pressure"
-              iconClass="text-primary"
-            />
-          </Reveal>
+        <div
+          ref={headerRef}
+          className="sticky top-[calc(var(--nav-h)+1.5rem)] z-0 flex items-end justify-between gap-6 will-change-transform"
+        >
+          <SectionHeading
+            id="competitions-heading"
+            icon="trophy"
+            title="Competitions"
+            subtitle="Building Products Under Pressure"
+            iconClass="text-primary"
+          />
 
           <Character
             pose="writing"
@@ -49,7 +73,7 @@ export function CompetitionsSection() {
           />
         </div>
 
-        <RevealGroup className="mt-3 space-y-6 lg:mt-4" gap={0.1}>
+        <RevealGroup ref={cardsRef} className="relative z-10 mt-3 space-y-6 lg:mt-4" gap={0.1}>
           {COMPETITIONS.map((competition) => (
             <RevealItem key={competition.title}>
               <PixelCard accent={competition.accent} className="p-5 sm:p-7 lg:p-8">
@@ -128,7 +152,7 @@ function CompetitionLines({ competition }: { competition: Competition }) {
 
   return (
     <div className="mt-4">
-      <p className="text-sm leading-relaxed">{first}</p>
+      <Highlighted text={first} accent={competition.accent} className="text-sm leading-relaxed" />
 
       {hasMore && (
         <div
@@ -138,9 +162,12 @@ function CompetitionLines({ competition }: { competition: Competition }) {
           <div className="overflow-hidden">
             <div className="space-y-2 pt-2">
               {rest.map((line) => (
-                <p key={line.slice(0, 24)} className="text-sm leading-relaxed">
-                  {line}
-                </p>
+                <Highlighted
+                  key={line.slice(0, 24)}
+                  text={line}
+                  accent={competition.accent}
+                  className="text-sm leading-relaxed"
+                />
               ))}
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import type { ReactNode } from "react";
 import { rise, stagger, VIEWPORT } from "@/animations/motion";
 
@@ -35,20 +36,21 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   );
 }
 
-/** Parent wrapper that releases its Reveal children in sequence. */
-export function RevealGroup({
-  children,
-  className,
-  gap = 0.08,
-  delay = 0,
-}: {
-  children: ReactNode;
-  className?: string;
-  gap?: number;
-  delay?: number;
-}) {
+/** Parent wrapper that releases its Reveal children in sequence. Forwards its
+ *  ref to the underlying element — sections that pin this block behind a
+ *  sticky header (via `slideBehind`) need a real DOM node to trigger off. */
+export const RevealGroup = forwardRef<
+  HTMLDivElement,
+  {
+    children: ReactNode;
+    className?: string;
+    gap?: number;
+    delay?: number;
+  }
+>(function RevealGroup({ children, className, gap = 0.08, delay = 0 }, ref) {
   return (
     <motion.div
+      ref={ref}
       className={className}
       variants={stagger(gap, delay)}
       initial="hidden"
@@ -58,7 +60,7 @@ export function RevealGroup({
       {children}
     </motion.div>
   );
-}
+});
 
 /** Child of RevealGroup — inherits the parent's stagger timing. */
 export function RevealItem({

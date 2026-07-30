@@ -39,6 +39,7 @@
   /* Ambient */
   --animate-cloud-drift: cloud-drift 200s linear infinite;
   --animate-lightbox-in: lightbox-in 300ms var(--ease-out-expensive);
+  --animate-character-glitch: character-glitch 650ms steps(1, end);
 }
 
 /* Clouds cross the sky once, then wrap. Duration and a negative delay are set
@@ -63,6 +64,94 @@
   }
 }
 
+/* A signal dropout, not a smooth wobble — steps(1,end) on the trigger class
+   holds each stop instantly instead of interpolating, which is what reads as
+   "glitch" rather than "shake". Two short flicker bursts with a calm gap
+   between them, applied to the sprite image only so it composes with the
+   character's own gentle idle sway on the wrapper above it. */
+@keyframes character-glitch {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+    filter: none;
+  }
+  4% {
+    opacity: 0.15;
+    transform: translate(-5px, 1px);
+    filter: hue-rotate(95deg) saturate(4);
+  }
+  8% {
+    opacity: 1;
+    transform: translate(4px, -1px) skewX(3deg);
+    filter: none;
+  }
+  13% {
+    opacity: 0;
+    transform: translate(-3px, 2px);
+  }
+  16% {
+    opacity: 1;
+    transform: translate(3px, 0);
+    filter: hue-rotate(-100deg) saturate(3);
+  }
+  22% {
+    opacity: 0.3;
+    transform: translate(-4px, 0) scaleX(1.03);
+    filter: none;
+  }
+  27% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(0, 0);
+    filter: none;
+  }
+  60% {
+    opacity: 0.1;
+    transform: translate(5px, -2px);
+    filter: hue-rotate(110deg) saturate(4);
+  }
+  64% {
+    opacity: 1;
+    transform: translate(-3px, 1px);
+    filter: none;
+  }
+  69% {
+    opacity: 0;
+    transform: translate(2px, 0) skewX(-3deg);
+  }
+  73% {
+    opacity: 1;
+    transform: translate(0, 0);
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+    filter: none;
+  }
+}
+
+/* Pixelated, coloured versions of the same two system cursors — arrow and
+   pointer — nothing about their shape changes, just the look. Static images,
+   not motion, so nothing here needs gating behind reduced-motion or pointer
+   type: touch devices simply never render a cursor and ignore this. */
+html {
+  cursor: url("/cursors/arrow-primary.svg") 2 2, auto;
+}
+
+a,
+button,
+[role="button"],
+input,
+textarea,
+select,
+summary {
+  cursor: url("/cursors/hand-azure.svg") 11 1, pointer;
+}
+
 /* ============================================================================
    BASE
    ========================================================================= */
@@ -76,6 +165,11 @@
     color-scheme: dark;
     /* Lenis drives scrolling; native smooth-scroll would fight it. */
     scroll-behavior: auto;
+    /* Belt-and-suspenders alongside body's own overflow-x: clip below — the
+       root is the element mobile browsers actually measure for horizontal
+       scroll, so this is the one that has to hold regardless of whether
+       body's overflow propagates to it. */
+    overflow-x: clip;
   }
 
   body {

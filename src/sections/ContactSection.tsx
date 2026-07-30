@@ -56,7 +56,7 @@ export function ContactSection() {
               >
                 <ul className="divide-y divide-dashed divide-line">
                   {CONTACT_CHANNELS.map((channel) => (
-                    <li key={channel.label} className="py-2.5 first:pt-0">
+                    <Reveal key={channel.label} as="li" className="py-2.5 first:pt-0">
                       <motion.a
                         href={channel.href}
                         {...interactive.icon}
@@ -85,16 +85,16 @@ export function ContactSection() {
                           </span>
                         </span>
                       </motion.a>
-                    </li>
+                    </Reveal>
                   ))}
 
                   {SOCIALS.map((social) => (
-                    <li key={social.label} className="py-2.5">
+                    <Reveal key={social.label} as="li" className="py-2.5">
                       <motion.a
                         href={social.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        aria-label={`${social.label} — opens in a new tab`}
+                        aria-label={`${social.label} - opens in a new tab`}
                         {...interactive.icon}
                         className="group flex items-center gap-4 rounded-lg sm:gap-5"
                       >
@@ -121,7 +121,7 @@ export function ContactSection() {
                           </span>
                         </span>
                       </motion.a>
-                    </li>
+                    </Reveal>
                   ))}
                 </ul>
               </PixelCard>

@@ -21,8 +21,8 @@ export function PixelBadge({ place, scale, accent, className }: PixelBadgeProps)
   return (
     <div
       className={cn(
-        "flex w-[8.75rem] shrink-0 flex-col items-center justify-center gap-1",
-        "rounded-lg border-2 px-4 py-3.5 text-center",
+        "flex w-28 shrink-0 flex-col items-center justify-center gap-1 sm:w-[8.75rem]",
+        "rounded-lg border-2 px-3 py-3.5 text-center sm:px-4",
         ACCENT_BORDER_STRONG[accent],
         className,
       )}

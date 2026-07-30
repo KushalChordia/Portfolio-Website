@@ -1,17 +1,24 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Character } from "@/components/character/Character";
 import { PixelButton } from "@/components/ui/PixelButton";
 import { PixelCard } from "@/components/ui/PixelCard";
 import { PixelIcon } from "@/components/ui/PixelIcon";
 import { Reveal, RevealGroup } from "@/components/ui/Reveal";
 import { TypeOnce } from "@/components/ui/TypeOnce";
+import { slideBehind } from "@/animations/scroll";
 import { FEATURES, HERO } from "@/constants/content";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { scrollToSection } from "@/hooks/useSmoothScroll";
 import { ACCENT_TEXT } from "@/utils/accents";
 
 /**
  * HOME
+ *
+ * Same pinned-header choreography as Experience and Competitions: the hero
+ * copy and character stay put while the feature cards ride up over them,
+ * then recede as the cards pass in front.
  *
  * Desktop: text left, character right, four feature cards along the bottom.
  * Mobile: the character takes the top ~38vh and the heading stacks underneath
@@ -22,14 +29,33 @@ import { ACCENT_TEXT } from "@/utils/accents";
  * small screens with `order`, so assistive tech always meets the h1 first.
  */
 export function HomeSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const header = headerRef.current;
+    const cards = cardsRef.current;
+    const section = sectionRef.current;
+    if (!header || !cards || !section) return;
+
+    return slideBehind({ header, cards, section });
+  }, [prefersReducedMotion]);
+
   return (
     <section
+      ref={sectionRef}
       id="home"
       aria-labelledby="home-heading"
       className="relative flex min-h-svh scroll-mt-[var(--nav-h)] flex-col pt-[var(--nav-h)]"
     >
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 sm:px-8">
-        <div className="flex flex-col items-center gap-2 lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end lg:gap-10">
+        <div
+          ref={headerRef}
+          className="sticky top-[calc(var(--nav-h)+1.5rem)] z-0 flex flex-col items-center gap-2 will-change-transform lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end lg:gap-10"
+        >
           {/* ---------------------------------------------------------------- */}
           {/* Copy                                                             */}
           {/* ---------------------------------------------------------------- */}
@@ -65,6 +91,7 @@ export function HomeSection() {
             <Character
               pose="wave"
               priority
+              glitch
               className="h-[20svh] w-auto max-w-[48vw] sm:h-[24svh] lg:h-auto lg:w-[clamp(190px,18vw,260px)] lg:max-w-none"
               sizes="(max-width: 1023px) 48vw, 18vw"
             />
@@ -76,7 +103,8 @@ export function HomeSection() {
       {/* Feature cards                                                      */}
       {/* ------------------------------------------------------------------ */}
       <RevealGroup
-        className="mx-auto w-full max-w-7xl px-5 pt-3 pb-4 sm:px-8 lg:pt-2 lg:pb-4"
+        ref={cardsRef}
+        className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-3 pb-4 sm:px-8 lg:pt-2 lg:pb-4"
         gap={0.07}
       >
         {/* Named so the h1 -> h3 jump doesn't leave a hole in the outline.

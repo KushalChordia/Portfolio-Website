@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { Character } from "@/components/character/Character";
+import { Highlighted } from "@/components/ui/Highlighted";
 import { PixelCard } from "@/components/ui/PixelCard";
 import { PixelIcon } from "@/components/ui/PixelIcon";
-import { Reveal } from "@/components/ui/Reveal";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { slideBehind } from "@/animations/scroll";
 import { ECELL, KOTAK, TIMELINE } from "@/constants/content";
@@ -99,18 +100,22 @@ export function ExperienceSection() {
                   {KOTAK.company}
                 </h3>
                 <span aria-hidden="true" className="font-pixel text-muted">
-                  —
+                  |
                 </span>
                 <p className="font-pixel text-base text-chalk sm:text-lg">{KOTAK.role}</p>
               </header>
 
-              <div className="mt-6 space-y-4">
+              <RevealGroup className="mt-6 space-y-4" gap={0.12}>
                 {KOTAK.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 24)} className="text-sm leading-relaxed sm:text-[0.9375rem]">
-                    {paragraph}
-                  </p>
+                  <RevealItem key={paragraph.slice(0, 24)}>
+                    <Highlighted
+                      text={paragraph}
+                      accent="secondary"
+                      className="text-sm leading-relaxed sm:text-[0.9375rem]"
+                    />
+                  </RevealItem>
                 ))}
-              </div>
+              </RevealGroup>
             </PixelCard>
           </Reveal>
 
@@ -118,7 +123,7 @@ export function ExperienceSection() {
           <Reveal>
             <Link
               href="/ecell"
-              aria-label={`${ECELL.org} — view the event photo gallery`}
+              aria-label={`${ECELL.org} - view the event photo gallery`}
               className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/60"
             >
               <PixelCard
@@ -138,7 +143,7 @@ export function ExperienceSection() {
                       <Image src="/icons/ECell.jpg" alt="" fill sizes="36px" className="object-cover" />
                     </span>
                     <h3 className="font-pixel text-lg text-azure sm:text-xl">{ECELL.org}</h3>
-                    <span aria-hidden="true" className="text-muted/50">
+                    <span aria-hidden="true" className="font-pixel text-muted">
                       |
                     </span>
                     <p className="font-pixel text-base text-chalk sm:text-lg">{ECELL.team}</p>
@@ -156,8 +161,9 @@ export function ExperienceSection() {
 
                 <ol className="mt-9 space-y-9 md:space-y-11">
                   {TIMELINE.map((entry, index) => (
-                    <li
+                    <Reveal
                       key={entry.period}
+                      as="li"
                       className="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-4 gap-y-4 md:grid-cols-[10rem_2.5rem_minmax(0,1fr)] md:gap-x-2"
                     >
                       {/* Period + role chip */}
@@ -209,10 +215,14 @@ export function ExperienceSection() {
                           >
                             {entry.headline}
                           </h4>
-                          <p className="mt-3 text-sm leading-relaxed">{entry.body}</p>
+                          <Highlighted
+                            text={entry.body}
+                            accent={entry.accent}
+                            className="mt-3 text-sm leading-relaxed"
+                          />
                         </div>
                       </div>
-                    </li>
+                    </Reveal>
                   ))}
                 </ol>
               </PixelCard>

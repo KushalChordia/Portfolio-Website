@@ -39,11 +39,11 @@ export function SectionHeading({
         <span
           aria-hidden="true"
           className={cn(
-            "relative mt-1 h-10 w-10 shrink-0 overflow-hidden rounded-lg border-2 sm:mt-2 sm:h-16 sm:w-16",
+            "relative h-12 w-12 shrink-0 self-center overflow-hidden rounded-lg border-2 sm:h-24 sm:w-24 lg:h-28 lg:w-28",
             iconImageBorderClass,
           )}
         >
-          <Image src={iconImage.src} alt={iconImage.alt} fill sizes="64px" className="object-cover" />
+          <Image src={iconImage.src} alt={iconImage.alt} fill sizes="(max-width: 639px) 48px, (max-width: 1023px) 96px, 112px" className="object-cover" />
         </span>
       ) : (
         icon && (
@@ -57,7 +57,7 @@ export function SectionHeading({
         <TypeOnScroll
           id={id}
           text={title}
-          className="font-pixel text-[clamp(1.5rem,7.5vw,2.5rem)] leading-tight text-chalk sm:text-[3.5rem] sm:leading-none lg:text-[4.5rem] xl:text-[5.25rem]"
+          className="font-pixel text-[clamp(1rem,5.5vw,2.5rem)] leading-tight text-chalk sm:text-[3.5rem] sm:leading-none lg:text-[4.5rem] xl:text-[5.25rem]"
         />
         <p className="mt-3 font-pixel text-base text-secondary sm:text-lg">{subtitle}</p>
       </div>
