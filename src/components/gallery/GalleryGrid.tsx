@@ -9,6 +9,16 @@ interface GalleryGridProps {
   photos: string[];
 }
 
+/* Every 5th tile is a 2x2 feature, the rest stay 1x1. A 2x2 block at the
+   widest (4-col) breakpoint leaves a 4-cell notch beside it that only the
+   following 4 plain tiles close — so a feature is only allowed when 4
+   fillers still follow it. Otherwise it'd sit orphaned with empty cells
+   around it, same hole bug as a plain row/col-span pattern. Only square
+   shapes ever appear, so grid-flow-dense always has a piece that fits any
+   leftover cell — the bento packs edge to edge with no holes. */
+const FEATURE_EVERY = 5;
+const isFeature = (index: number, total: number) => index % FEATURE_EVERY === 0 && index + 4 < total;
+
 /**
  * Grid of event photos that opens into a full-screen lightbox on click.
  * Keyboard: Escape closes, arrow keys step through — same set as any native
@@ -46,28 +56,41 @@ export function GalleryGrid({ photos }: GalleryGridProps) {
 
   return (
     <>
-      <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-        {photos.map((src, index) => (
-          <button
-            key={src}
-            type="button"
-            onClick={() => setActiveIndex(index)}
-            aria-label={`Open photo ${index + 1} of ${photos.length}`}
-            className="group relative aspect-square overflow-hidden rounded-xl border border-line bg-surface/85 shadow-sm transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-azure/60 hover:shadow-lg hover:shadow-azure/10 focus-visible:border-azure/60"
-          >
-            <Image
-              src={src}
-              alt=""
-              fill
-              sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
-              className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-void/60 via-void/0 to-void/0 opacity-0 transition-opacity duration-250 group-hover:opacity-100" />
-            <span className="absolute bottom-2 left-2 font-pixel text-[0.625rem] text-chalk opacity-0 transition-opacity duration-250 group-hover:opacity-100">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-          </button>
-        ))}
+      <div className="mt-10 grid grid-flow-dense grid-cols-2 auto-rows-[140px] gap-3 sm:grid-cols-3 sm:auto-rows-[160px] sm:gap-4 lg:grid-cols-4 lg:auto-rows-[190px]">
+        {photos.map((src, index) => {
+          const feature = isFeature(index, photos.length);
+          return (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              aria-label={`Open photo ${index + 1} of ${photos.length}`}
+              className={cn(
+                "group relative overflow-hidden rounded-lg border border-line/80 bg-void shadow-md transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                "hover:border-azure/50 hover:shadow-xl hover:shadow-azure/10",
+                feature && "col-span-2 row-span-2",
+              )}
+            >
+              <Image
+                src={src}
+                alt=""
+                fill
+                sizes={
+                  feature
+                    ? "(max-width: 639px) 100vw, (max-width: 1023px) 66vw, 50vw"
+                    : "(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
+                }
+                className="object-cover grayscale-[45%] contrast-[1.05] brightness-[0.92] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] group-hover:grayscale-0 group-hover:brightness-100"
+              />
+              {/* Permanent letterbox vignette for a moodier, cinematic base state */}
+              <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-void/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/0 to-void/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <span className="absolute bottom-2.5 left-3 font-pixel text-[0.625rem] tracking-wide text-chalk/90">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {activeIndex !== null && (
@@ -82,7 +105,7 @@ export function GalleryGrid({ photos }: GalleryGridProps) {
             type="button"
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-lg border border-line font-pixel text-xl text-chalk transition-colors duration-250 hover:border-azure/60 sm:right-6 sm:top-6"
+            className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-lg border border-line font-pixel text-xl text-chalk transition-colors duration-250 hover:border-azure/60 sm:right-6 sm:top-6"
           >
             ×
           </button>

@@ -7,6 +7,8 @@ const LOGO_SRC: Record<Competition["logo"], string> = {
   adobe: "/icons/Adobe.jpg",
   pathway: "/icons/Pathway.jpg",
   pmx: "/icons/PMx.jpg",
+  turtlemint: "/icons/TurtleMint.jpg",
+  civilconclave: "/icons/CivilConclave.jpg",
 };
 
 /**

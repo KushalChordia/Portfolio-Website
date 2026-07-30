@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SectionId } from "@/types";
 
@@ -12,6 +13,13 @@ import type { SectionId } from "@/types";
  */
 export function useActiveSection(ids: SectionId[], fallback: SectionId): SectionId {
   const [active, setActive] = useState<SectionId>(fallback);
+  // Navbar is part of the root layout, so it never unmounts on route change —
+  // without this, the observer set up on "/" keeps watching elements that get
+  // detached the moment you navigate away (e.g. to /ecell), and never
+  // re-attaches to the fresh ones when you come back. The underline just
+  // freezes wherever it last was. Re-running the effect per route re-queries
+  // the DOM and rebuilds the observer against whatever's actually mounted.
+  const pathname = usePathname();
 
   useEffect(() => {
     const elements = ids
@@ -49,7 +57,7 @@ export function useActiveSection(ids: SectionId[], fallback: SectionId): Section
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [ids, fallback]);
+  }, [ids, fallback, pathname]);
 
   return active;
 }

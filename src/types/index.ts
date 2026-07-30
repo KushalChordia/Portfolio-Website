@@ -39,7 +39,7 @@ export interface TimelineEntry {
 
 export interface Competition {
   org: string;
-  logo: "adobe" | "pathway" | "pmx";
+  logo: "adobe" | "pathway" | "pmx" | "turtlemint" | "civilconclave";
   title: string;
   lines: string[];
   tags: string[];

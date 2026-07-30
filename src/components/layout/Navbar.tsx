@@ -44,7 +44,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => go("home")}
-            className="font-pixel text-lg text-primary transition-transform duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] sm:text-xl"
+            className="shrink-0 font-pixel text-lg text-primary transition-transform duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] sm:text-xl"
           >
             {SITE.name}
           </button>
@@ -87,7 +87,7 @@ export function Navbar() {
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-line text-chalk transition-colors duration-250 hover:border-primary/60 lg:hidden"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line text-chalk transition-colors duration-250 hover:border-primary/60 lg:hidden"
           >
             <HamburgerIcon open={menuOpen} />
           </button>

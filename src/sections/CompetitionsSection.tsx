@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { Character } from "@/components/character/Character";
 import { CompetitionMark } from "@/components/ui/CompetitionMark";
 import { PixelBadge } from "@/components/ui/PixelBadge";
 import { PixelCard } from "@/components/ui/PixelCard";
+import { PixelIcon } from "@/components/ui/PixelIcon";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { COMPETITIONS } from "@/constants/content";
+import type { Competition } from "@/types";
 import { ACCENT_BORDER, ACCENT_TEXT } from "@/utils/accents";
 import { cn } from "@/utils/cn";
 
@@ -73,13 +76,7 @@ export function CompetitionsSection() {
                         {competition.title}
                       </h3>
 
-                      <div className="mt-4 space-y-2">
-                        {competition.lines.map((line) => (
-                          <p key={line.slice(0, 24)} className="text-sm leading-relaxed">
-                            {line}
-                          </p>
-                        ))}
-                      </div>
+                      <CompetitionLines competition={competition} />
 
                       <div className="mt-5 border-t border-dashed border-line pt-5">
                         <ul className="flex flex-wrap gap-2.5" aria-label="Focus areas">
@@ -115,5 +112,60 @@ export function CompetitionsSection() {
         </RevealGroup>
       </div>
     </section>
+  );
+}
+
+/**
+ * First paragraph always shows. The rest collapses behind "View more" — these
+ * write-ups run long, and showing all of them by default would make the
+ * column impossible to scan. The grid-rows trick animates height without
+ * ever measuring the collapsed content in JS.
+ */
+function CompetitionLines({ competition }: { competition: Competition }) {
+  const [expanded, setExpanded] = useState(false);
+  const [first, ...rest] = competition.lines;
+  const hasMore = rest.length > 0;
+
+  return (
+    <div className="mt-4">
+      <p className="text-sm leading-relaxed">{first}</p>
+
+      {hasMore && (
+        <div
+          className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-2 pt-2">
+              {rest.map((line) => (
+                <p key={line.slice(0, 24)} className="text-sm leading-relaxed">
+                  {line}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {hasMore && (
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+          className={cn(
+            "mt-3 flex items-center gap-1.5 font-pixel text-[0.6875rem] uppercase tracking-wide",
+            "transition-opacity duration-250 hover:opacity-75",
+            ACCENT_TEXT[competition.accent],
+          )}
+        >
+          {expanded ? "View less" : "View more"}
+          <PixelIcon
+            name="arrow"
+            size={12}
+            className={cn("transition-transform duration-250", expanded ? "-rotate-90" : "rotate-90")}
+          />
+        </button>
+      )}
+    </div>
   );
 }

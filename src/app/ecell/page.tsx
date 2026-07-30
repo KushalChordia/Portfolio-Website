@@ -3,8 +3,10 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { ScrollToTop } from "@/components/gallery/ScrollToTop";
 import { PixelIcon } from "@/components/ui/PixelIcon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TypeOnScroll } from "@/components/ui/TypeOnScroll";
 import { ECELL } from "@/constants/content";
 
 export const metadata: Metadata = {
@@ -31,6 +33,7 @@ export default function EcellGalleryPage() {
 
   return (
     <section className="relative pt-[calc(var(--nav-h)+2rem)] pb-20 lg:pb-24">
+      <ScrollToTop />
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         <Link
           href="/#experience"
@@ -42,15 +45,21 @@ export default function EcellGalleryPage() {
 
         <SectionHeading
           id="ecell-gallery-heading"
-          icon="briefcase"
+          iconImage={{ src: "/icons/ECell.jpg", alt: `${ECELL.org} logo` }}
+          iconImageBorderClass="border-azure/70"
           title={ECELL.org}
           subtitle={`${ECELL.team} — Moments from the journey`}
-          iconClass="text-azure"
           className="mt-6"
         />
 
         {photos.length > 0 ? (
-          <GalleryGrid photos={photos} />
+          <>
+            <GalleryGrid photos={photos} />
+            <TypeOnScroll
+              text="Work Hard, Party Harder!!"
+              className="mt-10 whitespace-nowrap text-center font-pixel text-[clamp(0.8rem,4.2vw,1.75rem)] text-secondary"
+            />
+          </>
         ) : (
           <p className="mt-12 font-body text-sm leading-relaxed text-muted">
             Photos coming soon.
