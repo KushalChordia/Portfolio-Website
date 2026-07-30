@@ -31,17 +31,15 @@ import { ACCENT_TEXT } from "@/utils/accents";
 export function HomeSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (prefersReducedMotion) return;
     const header = headerRef.current;
-    const cards = cardsRef.current;
     const section = sectionRef.current;
-    if (!header || !cards || !section) return;
+    if (!header || !section) return;
 
-    return slideBehind({ header, cards, section });
+    return slideBehind({ header, section });
   }, [prefersReducedMotion]);
 
   return (
@@ -103,7 +101,6 @@ export function HomeSection() {
       {/* Feature cards                                                      */}
       {/* ------------------------------------------------------------------ */}
       <RevealGroup
-        ref={cardsRef}
         className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-3 pb-4 sm:px-8 lg:pt-2 lg:pb-4"
         gap={0.07}
       >

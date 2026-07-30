@@ -31,17 +31,15 @@ import { cn } from "@/utils/cn";
 export function ExperienceSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (prefersReducedMotion) return;
     const header = headerRef.current;
-    const cards = cardsRef.current;
     const section = sectionRef.current;
-    if (!header || !cards || !section) return;
+    if (!header || !section) return;
 
-    return slideBehind({ header, cards, section });
+    return slideBehind({ header, section });
   }, [prefersReducedMotion]);
 
   return (
@@ -78,7 +76,7 @@ export function ExperienceSection() {
         {/* ---------------------------------------------------------------- */}
         {/* Cards — these ride up over the header                            */}
         {/* ---------------------------------------------------------------- */}
-        <div ref={cardsRef} className="relative z-10 mt-3 space-y-8 lg:mt-4">
+        <div className="relative z-10 mt-3 space-y-8 lg:mt-4">
           {/* Kotak Securities */}
           <Reveal>
             <PixelCard
