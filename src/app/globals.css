@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   DESIGN TOKENS
+   Single source of truth. Every colour/type/motion decision in the app
+   resolves back to one of these values — nothing is hand-picked in components.
+   ========================================================================= */
+@theme {
+  /* Surfaces — never pure black */
+  --color-void: #070b1a;
+  --color-surface: #0d1226;
+  --color-surface-2: #111838;
+  --color-line: #1e2748;
+
+  /* Brand */
+  --color-primary: #ffc72c;
+  --color-secondary: #a970ff;
+  --color-accent: #44d17a;
+  --color-azure: #4fa9ff;
+
+  /* Text */
+  --color-chalk: #f4f4f4;
+  --color-muted: #b8bdd0;
+
+  /* Type */
+  --font-pixel: var(--font-silkscreen), ui-monospace, monospace;
+  --font-body: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Motion — one language, used everywhere */
+  --ease-out-expensive: cubic-bezier(0.16, 1, 0.3, 1); /* ≈ power3.out */
+  --duration-press: 150ms;
+  --duration-hover: 250ms;
+  --duration-entrance: 600ms;
+  --duration-section: 800ms;
+
+  /* Rhythm */
+  --nav-h: 4.5rem;
+
+  /* Ambient */
+  --animate-cloud-drift: cloud-drift 200s linear infinite;
+  --animate-lightbox-in: lightbox-in 300ms var(--ease-out-expensive);
+}
+
+/* Clouds cross the sky once, then wrap. Duration and a negative delay are set
+   per-cloud inline, so no two move together. */
+@keyframes cloud-drift {
+  from {
+    transform: translate3d(-20vw, 0, 0);
+  }
+  to {
+    transform: translate3d(120vw, 0, 0);
+  }
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================================
+   BASE
+   ========================================================================= */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    background-color: var(--color-void);
+    color-scheme: dark;
+    /* Lenis drives scrolling; native smooth-scroll would fight it. */
+    scroll-behavior: auto;
+  }
+
+  body {
+    /*
+     * Deliberately NO background-color here.
+     *
+     * `html` already carries the void colour, which CSS propagates to the
+     * canvas. If `body` also painted a background it would sit in the paint
+     * order *above* negative z-index children — and the entire PixelWorld
+     * layer would vanish behind it.
+     */
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    /*
+     * `clip`, not `hidden`. `overflow-x: hidden` turns the body into a scroll
+     * container, which silently breaks `position: sticky` on the Experience
+     * header. `clip` trims the same overflow without creating one.
+     */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-pixel);
+    color: var(--color-chalk);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-void);
+  }
+
+  /* Visible, on-brand focus ring on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Pixel-crisp scrollbar that matches the world. */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border: 2px solid var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secondary);
+  }
+}
+
+/* ============================================================================
+   PIXEL PRIMITIVES
+   ========================================================================= */
+@utility pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Notched corner ticks. Applied to the contact card so its frame reads as a
+   drawn object rather than a plain rounded rectangle. Inherits currentColor,
+   so the tick colour is set by the element's own text colour. */
+@utility corner-ticks {
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    border-color: inherit;
+  }
+  &::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    border-top-left-radius: 0.75rem;
+  }
+  &::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    border-bottom-right-radius: 0.75rem;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Horizontal snap rail — mobile feature carousel. */
+@utility snap-rail {
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* The one-and-only caret used by the hero typing line. */
+@utility caret {
+  display: inline-block;
+  width: 0.62em;
+  height: 0.9em;
+  translate: 0 0.06em;
+  background: var(--color-primary);
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   Ambient motion is fully removed; layout and legibility are untouched.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .caret {
+    animation: none;
+    opacity: 1;
+  }
+}
