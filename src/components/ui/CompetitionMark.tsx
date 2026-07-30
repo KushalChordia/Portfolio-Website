@@ -28,7 +28,11 @@ export function CompetitionMark({
     <div
       className={cn(
         "relative h-20 w-20 shrink-0 overflow-hidden sm:h-[7.5rem] sm:w-[7.5rem]",
-        "rounded-lg border-2 bg-void/50",
+        "rounded-lg border-2",
+        // TurtleMint's source icon sits inset on a white canvas rather than
+        // filling the frame edge to edge, so the tile's own corners show
+        // through — a dark fallback there reads as a broken/cropped image.
+        logo === "turtlemint" ? "bg-white" : "bg-void/50",
         ACCENT_BORDER_STRONG[accent],
       )}
     >

@@ -106,7 +106,7 @@ export function Navbar() {
 
 /** Three pixel bars that fold into a cross. Same 250ms as every other hover. */
 function HamburgerIcon({ open }: { open: boolean }) {
-  const bar = "absolute h-0.5 w-5 bg-current transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]";
+  const bar = "absolute left-0 h-0.5 w-5 bg-current transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]";
   return (
     <span aria-hidden="true" className="relative block h-5 w-5">
       <span className={cn(bar, open ? "top-2.5 rotate-45" : "top-1")} />
