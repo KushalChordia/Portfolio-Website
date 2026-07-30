@@ -5,7 +5,11 @@
       "Bash(curl *)",
       "Bash(powershell -NoProfile -Command \"Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 3002 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue\")",
       "Bash(npm run *)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(python3 -c \"import PIL; print\\('PIL available'\\)\")",
+      "Read(//c/Users/Kushal/Downloads/**)",
+      "Bash(rm \"C:\\\\Users\\\\Kushal\\\\Downloads\\\\kushal-portfolio \\(1\\)\\\\kushal-portfolio\\\\public\\\\crop-test-temp.html\")",
+      "Bash(rm \"C:\\\\Users\\\\Kushal\\\\Downloads\\\\turtlemint-cropped.png\")"
     ]
   }
 }
