@@ -56,7 +56,7 @@ export function ContactSection() {
               >
                 <ul className="divide-y divide-dashed divide-line">
                   {CONTACT_CHANNELS.map((channel) => (
-                    <Reveal key={channel.label} as="li" className="py-2.5 first:pt-0">
+                    <Reveal key={channel.label} as="li" className="py-2 first:pt-0 sm:py-2.5">
                       <motion.a
                         href={channel.href}
                         {...interactive.icon}
@@ -64,12 +64,13 @@ export function ContactSection() {
                       >
                         <span
                           className={cn(
-                            "flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 sm:h-14 sm:w-14",
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 sm:h-14 sm:w-14",
                             ACCENT_BORDER[channel.accent],
                             ACCENT_TEXT[channel.accent],
                           )}
                         >
-                          <PixelIcon name={channel.icon} size={26} />
+                          <PixelIcon name={channel.icon} size={22} className="sm:hidden" />
+                          <PixelIcon name={channel.icon} size={26} className="hidden sm:block" />
                         </span>
                         <span className="min-w-0">
                           <span
@@ -89,7 +90,7 @@ export function ContactSection() {
                   ))}
 
                   {SOCIALS.map((social) => (
-                    <Reveal key={social.label} as="li" className="py-2.5">
+                    <Reveal key={social.label} as="li" className="py-2 sm:py-2.5">
                       <motion.a
                         href={social.href}
                         target="_blank"
@@ -100,12 +101,13 @@ export function ContactSection() {
                       >
                         <span
                           className={cn(
-                            "flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 sm:h-14 sm:w-14",
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 sm:h-14 sm:w-14",
                             ACCENT_BORDER[social.accent],
                             ACCENT_TEXT[social.accent],
                           )}
                         >
-                          <PixelIcon name={social.icon} size={26} />
+                          <PixelIcon name={social.icon} size={22} className="sm:hidden" />
+                          <PixelIcon name={social.icon} size={26} className="hidden sm:block" />
                         </span>
                         <span className="min-w-0">
                           <span
@@ -134,7 +136,7 @@ export function ContactSection() {
           <div className="order-1 flex w-full justify-center lg:order-none lg:justify-end">
             <Character
               pose="folded"
-              className="h-[26svh] w-auto max-w-[52vw] sm:h-[30svh] lg:h-auto lg:w-[clamp(200px,20vw,290px)] lg:max-w-none"
+              className="h-[19svh] w-auto max-w-[46vw] sm:h-[30svh] sm:max-w-[52vw] lg:h-auto lg:w-[clamp(200px,20vw,290px)] lg:max-w-none"
               sizes="(max-width: 1023px) 52vw, 26vw"
             />
           </div>
