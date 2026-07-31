@@ -22,8 +22,9 @@ import { ACCENT_TEXT } from "@/utils/accents";
  *
  * Desktop: text left, character right, four feature cards along the bottom.
  * Mobile: the character takes the top ~38vh and the heading stacks underneath
- * it, and the four cards become a snap carousel — a different layout, not a
- * shrunken one.
+ * it, and the four cards become a 2x2 grid — all four visible in the same
+ * scroll that reveals the row, no swiping required to find the last one.
+ * Tablet (sm) keeps the snap carousel, where there's room for it to peek.
  *
  * DOM order is heading-first in both cases; the character is moved above it on
  * small screens with `order`, so assistive tech always meets the h1 first.
@@ -111,12 +112,12 @@ export function HomeSection() {
         </h2>
         <ul
           aria-labelledby="features-heading"
-          className="snap-rail no-scrollbar -mx-5 flex gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0"
+          className="grid grid-cols-2 gap-3 sm:-mx-8 sm:flex sm:snap-rail sm:no-scrollbar sm:gap-4 sm:overflow-x-auto sm:px-8 sm:pb-2 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0"
         >
           {FEATURES.map((feature) => (
             <li
               key={feature.index}
-              className="w-[80%] max-w-sm shrink-0 snap-center sm:w-[58%] lg:w-auto lg:max-w-none lg:shrink"
+              className="sm:w-[58%] sm:max-w-sm sm:shrink-0 sm:snap-center lg:w-auto lg:max-w-none lg:shrink"
             >
               <PixelCard accent={feature.accent} staggered className="h-full p-4 sm:p-5">
                 <div className="flex items-baseline gap-3">
