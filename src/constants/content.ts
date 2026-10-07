@@ -207,8 +207,8 @@ export const SOCIALS: SocialLink[] = [
   },
   {
     label: "Instagram",
-    value: "kushxl_08",
-    href: "https://www.instagram.com/kushxl_08",
+    value: "kushal_0886_",
+    href: "https://www.instagram.com/kushal_0886_",
     icon: "instagram",
     accent: "secondary",
   },
